@@ -1,0 +1,4 @@
+slackclient==1.0.0
+tinydb==3.2.2
+tinydb-serialization==1.0.3
+schedule==0.4.2
