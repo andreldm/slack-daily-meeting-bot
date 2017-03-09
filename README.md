@@ -8,7 +8,7 @@ A simple bot for daily meetings.
 
 ## Setup
 
-* Set SLACK_BOT_TOKEN in setup.sh (you may find @ api.slack.com/apps/<APP_ID>/oauth)
+* Set SLACK_BOT_TOKEN in setup.sh (you may find @ api.slack.com/apps/\<APP_ID\>/oauth)
 
 ## Running
 * `source ./setup.sh`
