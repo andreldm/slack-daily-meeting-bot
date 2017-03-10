@@ -40,7 +40,8 @@ class AnswerHandler:
     def finish_report(self, channel, user):
         title, attachments = self.format_attachments(user)
         user['current_question'] = None
-        if (len(attachments) == 0):
+        user['last_report'] = date.today()
+        if len(attachments) == 0:
             self.post(channel, "I get it, you're not in the mood today.")
             return
         self.post(channel, "Thanks, keep rocking!")

@@ -1,6 +1,8 @@
 import os
+import re
 import time
 import json
+import schedule
 
 from slackclient import SlackClient
 from handlers import HandlerManager
@@ -65,6 +67,17 @@ def resolve_bot_id():
 
     raise Exception("Failed to find bot named '{0}'!".format(BOT_NAME))
 
+def run_daily_meeting():
+    users = storage.get_users_for_daily_meeting()
+    print("Run daily meeting:")
+    for user in users:
+        channel = "@{}".format(user['name'])
+        first_name = re.split(" +", user['real_name'])[0].strip()
+        post(channel,
+             "Hi {}! Time for the standup metting. Please answer the following questions:"
+             .format(first_name))
+        handler.handle(channel, user, 'report')
+        storage.save_user(user)
 
 if __name__ == "__main__":
     if not sc.rtm_connect():
@@ -73,6 +86,8 @@ if __name__ == "__main__":
     BOT_ID = resolve_bot_id()
     print("Bot {0} connected and running!".format(BOT_ID))
 
+    schedule.every().day.at("09:30").do(run_daily_meeting)
+
     while True:
         msg, channel, user_id = parse_output(sc.rtm_read())
         if msg and channel and user_id:
@@ -80,5 +95,6 @@ if __name__ == "__main__":
             user = storage.get_user(user['id'], user)
             handler.handle(channel, user, msg)
             storage.save_user(user)
+        schedule.run_pending()
         time.sleep(1)
 

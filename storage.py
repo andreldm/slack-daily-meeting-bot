@@ -32,6 +32,15 @@ class Storage:
 
         return user
 
+    def get_users_for_daily_meeting(self):
+        query = Query()
+        return self.users.search(
+            (~ query.last_report.exists() ) |
+            ( query.last_report.test(lambda d:
+                d and
+                datetime.strptime(d, '%Y-%m-%dT%H:%M:%S').date() < datetime.today().date()) )
+        )
+
     def save_user(self, user):
         if not user and not 'id' in user:
             raise Exception("Not a valid user")

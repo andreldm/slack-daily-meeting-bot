@@ -7,6 +7,8 @@ class StartHandler:
         if msg == 'report':
             if 'current_question' in user and user['current_question']:
                 self.post(channel, "Already reporting.")
+                self.post(channel, "Already reporting...")
+                self.ask_question(channel, user['current_question'])
             else:
                 user['current_question'] = 0
                 self.ask_question(channel, 0)
