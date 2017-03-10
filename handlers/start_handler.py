@@ -4,9 +4,8 @@ class StartHandler:
         self.ask_question = ask_question
 
     def handle(self, channel, user, msg):
-        if msg == 'report':
+        if msg in ['report', 'start']:
             if 'current_question' in user and user['current_question']:
-                self.post(channel, "Already reporting.")
                 self.post(channel, "Already reporting...")
                 self.ask_question(channel, user['current_question'])
             else:

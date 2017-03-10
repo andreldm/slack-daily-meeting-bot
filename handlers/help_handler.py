@@ -5,7 +5,7 @@ class HelpHandler:
     def handle(self, channel, user, msg):
         if msg == 'help':
             self.post(channel, """This is what I can do for you:
-`report` Start a daily meeting report manually""")
+`report`, `start` Start a daily meeting report manually""")
             return True
 
         return False

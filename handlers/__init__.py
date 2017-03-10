@@ -6,18 +6,18 @@ from .nonsense_handler import NonsenseHandler
 
 class HandlerManager:
     def __init__(self, post, post_report):
-        answerHandler = AnswerHandler(post, post_report)
+        answer_handler = AnswerHandler(post, post_report)
 
         self.handlers = [
             CancelHandler(post),
-            answerHandler,
-            StartHandler(post, answerHandler.ask_question),
+            answer_handler,
+            StartHandler(post, answer_handler.ask_question),
             HelpHandler(post),
             NonsenseHandler(post)
         ]
 
     def handle(self, channel, user, msg):
-        for h in self.handlers:
-            if h.handle(channel, user, msg):
+        for handler in self.handlers:
+            if handler.handle(channel, user, msg):
                 break
 

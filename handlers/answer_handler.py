@@ -1,9 +1,9 @@
 from datetime import date
 
 QUESTIONS = [
-    {'text': "O que você conseguiu ontem?", 'color': '#C0DADB' },
-    {'text': "O que você vai fazer hoje?", 'color': '#839BBD' },
-    {'text': "Quais obstáculos estão impedindo o seu progresso?", 'color': '#E59797' }
+    {'text': "O que você conseguiu ontem?", 'color': '#C0DADB'},
+    {'text': "O que você vai fazer hoje?", 'color': '#839BBD'},
+    {'text': "Quais obstáculos estão impedindo o seu progresso?", 'color': '#E59797'}
 ]
 
 class AnswerHandler:

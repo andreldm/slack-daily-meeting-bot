@@ -19,18 +19,19 @@ sc = SlackClient(os.environ['SLACK_BOT_TOKEN'])
 storage = Storage()
 
 def post(channel, text, as_user=None):
-    if as_user is None: as_user = True
+    if as_user is None:
+        as_user = True
     sc.api_call("chat.postMessage", channel=channel, as_user=as_user, text=text)
 
 
 def post_report(user, title, attachments):
     sc.api_call("chat.postMessage",
-            channel=DAILY_MEETING_CHANNEL,
-            as_user=False,
-            username=user['name'],
-            icon_url=user['profile']['image_48'],
-            text=title,
-            attachments=json.dumps(attachments))
+                channel=DAILY_MEETING_CHANNEL,
+                as_user=False,
+                username=user['name'],
+                icon_url=user['profile']['image_48'],
+                text=title,
+                attachments=json.dumps(attachments))
 
 
 handler = HandlerManager(post, post_report)
@@ -52,7 +53,6 @@ def parse_output(output_list):
     if output_list and len(output_list) > 0:
         for output in output_list:
             if is_direct_message(output, BOT_ID):
-                print (output)
                 return output['text'], output['channel'], output['user']
     return None, None, None
 
@@ -65,7 +65,7 @@ def resolve_bot_id():
             if 'name' in user and user.get('name') == BOT_NAME:
                 return user.get('id')
 
-    raise Exception("Failed to find bot named '{0}'!".format(BOT_NAME))
+    raise Exception("Failed to find bot named '{}'!".format(BOT_NAME))
 
 def run_daily_meeting():
     users = storage.get_users_for_daily_meeting()
@@ -84,7 +84,7 @@ if __name__ == "__main__":
         raise Exception("Connection failed! Please check your Slack Token")
 
     BOT_ID = resolve_bot_id()
-    print("Bot {0} connected and running!".format(BOT_ID))
+    print("Bot {} connected and running!".format(BOT_ID))
 
     schedule.every().day.at("09:30").do(run_daily_meeting)
 
