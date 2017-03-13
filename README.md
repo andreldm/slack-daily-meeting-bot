@@ -13,3 +13,11 @@ A simple bot for daily meetings.
 ## Running
 * `source ./setup.sh`
 * `python bot.py`
+
+## Development TODO
+
+* [ ] Add `register` command or something else to register new users
+* [ ] Use threading.Timer to randomize report time, set them apart 5 minutes
+* [ ] Add `ignore me for # days` command
+* [ ] Add `stats` command to display report rates for each user
+* [ ] Improve help output
