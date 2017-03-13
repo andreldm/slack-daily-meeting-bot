@@ -68,6 +68,7 @@ def run_daily_meeting():
     users = storage.get_users_for_daily_meeting()
     print("Run daily meeting:")
     for user in users:
+        print(user['name'])
         channel = "@{}".format(user['name'])
         first_name = re.split(" +", user['real_name'])[0].strip()
         post(channel,
