@@ -1,10 +1,6 @@
 from datetime import date, datetime
 
-QUESTIONS = [
-    {'text': "O que você conseguiu ontem?", 'color': '#C0DADB'},
-    {'text': "O que você vai fazer hoje?", 'color': '#839BBD'},
-    {'text': "Quais obstáculos estão impedindo o seu progresso?", 'color': '#E59797'}
-]
+import config
 
 class AnswerHandler:
     def __init__(self, post, post_report):
@@ -23,7 +19,7 @@ class AnswerHandler:
         else:
             user['answer{0}'.format(question_id)] = msg
 
-        if question_id + 1 >= len(QUESTIONS):
+        if question_id + 1 >= len(config.QUESTIONS):
             self.finish_report(channel, user)
             return True
 
@@ -34,7 +30,7 @@ class AnswerHandler:
         return True
 
     def ask_question(self, channel, question_id):
-        question = QUESTIONS[question_id]['text']
+        question = config.QUESTIONS[question_id]['text']
         self.post(channel, question)
 
     def finish_report(self, channel, user):
@@ -53,16 +49,15 @@ class AnswerHandler:
         attachment = {}
         title = "*{0}* posted a status update for *{1}*".format(user['real_name'], today)
 
-        for i in range(len(QUESTIONS)):
+        for i in range(len(config.QUESTIONS)):
             key = 'answer{0}'.format(i)
             answer = user[key]
             if answer:
-                attachment['text'] = "*{0}*\n{1}".format(QUESTIONS[i]['text'], answer)
-                attachment['color'] = QUESTIONS[i]['color']
+                attachment['text'] = "*{0}*\n{1}".format(config.QUESTIONS[i]['text'], answer)
+                attachment['color'] = config.QUESTIONS[i]['color']
                 attachment['mrkdwn_in'] = ["text"]
                 attachments.append(attachment)
                 attachment = {}
             user[key] = None
 
         return title, attachments
-

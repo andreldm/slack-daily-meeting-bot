@@ -4,16 +4,13 @@ import time
 import json
 import schedule
 
+import config
+
 from slackclient import SlackClient
 from handlers import HandlerManager
 from storage import Storage
 
 BOT_ID = ''
-BOT_NAME = 'dailymeetingbot'
-DAILY_MEETING_CHANNEL = '#test-dailymeetingbot'
-
-COMMAND_ECHO = 'echo'
-COMMAND_HELP = 'help'
 
 sc = SlackClient(os.environ['SLACK_BOT_TOKEN'])
 storage = Storage()
@@ -26,7 +23,7 @@ def post(channel, text, as_user=None):
 
 def post_report(user, title, attachments):
     sc.api_call("chat.postMessage",
-                channel=DAILY_MEETING_CHANNEL,
+                channel=config.DAILY_MEETING_CHANNEL,
                 as_user=False,
                 username=user['name'],
                 icon_url=user['profile']['image_48'],
@@ -62,10 +59,10 @@ def resolve_bot_id():
     if res.get('ok'):
         users = res.get('members')
         for user in users:
-            if 'name' in user and user.get('name') == BOT_NAME:
+            if 'name' in user and user.get('name') == config.BOT_NAME:
                 return user.get('id')
 
-    raise Exception("Failed to find bot named '{}'!".format(BOT_NAME))
+    raise Exception("Failed to find bot named '{}'!".format(config.BOT_NAME))
 
 def run_daily_meeting():
     users = storage.get_users_for_daily_meeting()
@@ -97,4 +94,3 @@ if __name__ == "__main__":
             storage.save_user(user)
         schedule.run_pending()
         time.sleep(1)
-
