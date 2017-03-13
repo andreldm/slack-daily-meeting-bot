@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 
 QUESTIONS = [
     {'text': "O que você conseguiu ontem?", 'color': '#C0DADB'},
@@ -40,7 +40,7 @@ class AnswerHandler:
     def finish_report(self, channel, user):
         title, attachments = self.format_attachments(user)
         user['current_question'] = None
-        user['last_report'] = date.today()
+        user['last_report'] = datetime.today()
         if len(attachments) == 0:
             self.post(channel, "I get it, you're not in the mood today.")
             return
