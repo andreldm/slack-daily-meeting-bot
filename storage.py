@@ -37,7 +37,7 @@ class Storage:
         return self.users.search(
             (~ query.last_report.exists()) |
             (query.last_report.test(lambda d:
-                                    d and
+                                    not d or
                                     d.date() < datetime.today().date()))
         )
 
