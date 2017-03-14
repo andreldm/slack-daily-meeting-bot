@@ -2,6 +2,7 @@
 
 BOT_NAME = 'dailymeetingbot'
 DAILY_MEETING_CHANNEL = '#test-dailymeetingbot'
+TIME = '09:30'
 
 QUESTIONS = [
     {'text': "O que você conseguiu ontem?", 'color': '#C0DADB'},

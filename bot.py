@@ -84,7 +84,10 @@ if __name__ == "__main__":
     BOT_ID = resolve_bot_id()
     print("Bot {} connected and running!".format(BOT_ID))
 
-    schedule.every().day.at("09:30").do(run_daily_meeting)
+    schedule \
+        .every().day \
+        .at(config.TIME) \
+        .do(run_daily_meeting)
 
     while True:
         msg, channel, user_id = parse_output(sc.rtm_read())
