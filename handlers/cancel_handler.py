@@ -8,7 +8,7 @@ class CancelHandler:
 
         if 'current_question' in user and user['current_question'] is not None:
             self.post(channel, "Okay, never mind.")
-            del user['current_question']
+            user['current_question'] = None
         else:
             self.post(channel, "You're not reporting.")
 
