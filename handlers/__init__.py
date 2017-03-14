@@ -10,9 +10,9 @@ class HandlerManager:
 
         self.handlers = [
             CancelHandler(post),
-            answer_handler,
-            StartHandler(post, answer_handler.ask_question),
             HelpHandler(post),
+            StartHandler(post, answer_handler.ask_question),
+            answer_handler,
             NonsenseHandler(post)
         ]
 

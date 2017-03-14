@@ -3,7 +3,7 @@ class CancelHandler:
         self.post = post
 
     def handle(self, channel, user, msg):
-        if not msg == 'cancel':
+        if not msg.lower() == 'cancel':
             return False
 
         if 'current_question' in user and user['current_question'] is not None:

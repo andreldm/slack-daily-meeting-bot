@@ -13,7 +13,7 @@ class AnswerHandler:
 
         question_id = user['current_question']
 
-        if msg == 'none':
+        if msg.lower() in ['nothing', 'none', 'nope', 'skip']:
             user['answer{0}'.format(question_id)] = None
             user['current_question'] = question_id + 1
         else:
