@@ -13,4 +13,3 @@ class CancelHandler:
             self.post(channel, "You're not reporting.")
 
         return True
-

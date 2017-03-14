@@ -47,7 +47,8 @@ class AnswerHandler:
         today = date.today().strftime('%b %d, %Y')
         attachments = []
         attachment = {}
-        title = "*{0}* posted a status update for *{1}*".format(user['real_name'], today)
+        title = "*{0}* posted a status update for *{1}*".format(
+            user['real_name'] or user['name'], today)
 
         for i in range(len(config.QUESTIONS)):
             key = 'answer{0}'.format(i)
