@@ -60,7 +60,7 @@ def handle_message(m):
     if not is_direct_message(m, BOT_ID):
         return
 
-    text, user_id, channel = m['text'], m['channel'], m['user']
+    text, user_id, channel = m['text'], m['user'], m['channel']
 
     if text and channel and user_id:
         user = get_user(user_id)
