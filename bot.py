@@ -46,12 +46,35 @@ def is_direct_message(output, own_id):
         output['channel'].startswith('D')
 
 
-def parse_output(output_list):
-    if output_list and len(output_list) > 0:
-        for output in output_list:
-            if is_direct_message(output, BOT_ID):
-                return output['text'], output['channel'], output['user']
-    return None, None, None
+def fetch_messages():
+    try:
+        messages = sc.rtm_read()
+        if messages and len(messages) > 0:
+            for m in messages:
+                handle_message(m)
+    except TimeoutError:
+        pass
+
+
+def handle_message(m):
+    if not is_direct_message(m, BOT_ID):
+        return
+
+    text, user_id, channel = m['text'], m['channel'], m['user']
+
+    if text and channel and user_id:
+        user = get_user(user_id)
+        handler.handle(channel, user, text)
+        storage.save_user(user)
+
+
+"""Get the user cached in local storage or fetch from API (It'll be cached later)"""
+def get_user(user_id):
+    user = storage.get_user(user_id, None)
+    # TODO: update this user from API once in while
+    if user:
+        return user
+    return sc.api_call("users.info", user=user_id)['user']
 
 
 def resolve_bot_id():
@@ -90,11 +113,6 @@ if __name__ == "__main__":
         .do(run_daily_meeting)
 
     while True:
-        msg, channel, user_id = parse_output(sc.rtm_read())
-        if msg and channel and user_id:
-            user = sc.api_call("users.info", user=user_id)['user']
-            user = storage.get_user(user['id'], user)
-            handler.handle(channel, user, msg)
-            storage.save_user(user)
+        fetch_messages()
         schedule.run_pending()
         time.sleep(1)
