@@ -99,7 +99,7 @@ def run_daily_meeting():
     for user in users:
         print(user['name'])
         channel = "@{}".format(user['name'])
-        first_name = re.split(" +", user['real_name'])[0].strip()
+        first_name = re.split(" +", user.get('real_name', user['name']))[0].strip()
         post(channel,
              "Hi {}! Time for the standup metting. Please answer the following questions:"
              .format(first_name))
