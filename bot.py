@@ -2,6 +2,7 @@ import os
 import re
 import time
 import json
+import datetime
 import schedule
 
 import config
@@ -88,8 +89,13 @@ def resolve_bot_id():
     raise Exception("Failed to find bot named '{}'!".format(config.BOT_NAME))
 
 def run_daily_meeting():
+    weekno = datetime.datetime.today().weekday()
+    if weekno >= 5:
+        return
+
     users = storage.get_users_for_daily_meeting()
     print("Run daily meeting:")
+
     for user in users:
         print(user['name'])
         channel = "@{}".format(user['name'])
