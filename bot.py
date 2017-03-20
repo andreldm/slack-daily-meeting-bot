@@ -73,7 +73,7 @@ def handle_message(m):
 def get_user(user_id):
     user = storage.get_user(user_id, None)
     # TODO: update this user from API once in while
-    if user:
+    if user and user.get('name'):
         return user
     return sc.api_call("users.info", user=user_id)['user']
 
