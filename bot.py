@@ -52,8 +52,8 @@ def fetch_messages():
         if messages and len(messages) > 0:
             for m in messages:
                 handle_message(m)
-    except TimeoutError:
-        pass
+    except Exception as e:
+        print(e)
 
 
 def handle_message(m):
