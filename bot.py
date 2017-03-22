@@ -12,6 +12,7 @@ from handlers import HandlerManager
 from storage import Storage
 
 BOT_ID = ''
+READ_WEBSOCKET_DELAY = 2
 
 sc = SlackClient(os.environ['SLACK_BOT_TOKEN'])
 storage = Storage()
@@ -48,13 +49,10 @@ def is_direct_message(output, own_id):
 
 
 def fetch_messages():
-    try:
-        messages = sc.rtm_read()
-        if messages and len(messages) > 0:
-            for m in messages:
-                handle_message(m)
-    except Exception as e:
-        print(e)
+    messages = sc.rtm_read()
+    if messages and len(messages) > 0:
+        for m in messages:
+            handle_message(m)
 
 
 def handle_message(m):
@@ -120,7 +118,14 @@ if __name__ == "__main__":
         .at(config.TIME) \
         .do(run_daily_meeting)
 
-    while True:
-        fetch_messages()
-        schedule.run_pending()
-        time.sleep(1)
+    try:
+        while True:
+            fetch_messages()
+            schedule.run_pending()
+            time.sleep(READ_WEBSOCKET_DELAY)
+    except WebSocketConnectionClosedException as e:
+        print(e)
+        time.sleep(READ_WEBSOCKET_DELAY)
+        sc.rtm_connect()
+    except Exception as e:
+        print(e)
