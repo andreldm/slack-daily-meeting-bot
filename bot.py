@@ -10,6 +10,7 @@ import config
 from slackclient import SlackClient
 from handlers import HandlerManager
 from storage import Storage
+from websocket import WebSocketConnectionClosedException
 
 BOT_ID = ''
 READ_WEBSOCKET_DELAY = 2
