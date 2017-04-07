@@ -101,7 +101,7 @@ def run_daily_meeting():
         channel = "@{}".format(user['name'])
         first_name = re.split(" +", user.get('real_name') or user.get('name'))[0].strip()
         post(channel,
-             "Hi {}! Time for the standup metting. Please answer the following questions:"
+             "Hi {}! Time for the stand-up meeting. Please answer the following questions:"
              .format(first_name))
         handler.handle(channel, user, 'report')
         storage.save_user(user)
