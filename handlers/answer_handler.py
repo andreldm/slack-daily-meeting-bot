@@ -2,13 +2,35 @@ from datetime import date, datetime
 
 import config
 
+
+def format_attachments(user):
+    today = date.today().strftime('%b %d, %Y')
+    attachments = []
+    attachment = {}
+    title = "*{0}* posted a status update for *{1}*".format(
+        user.get('real_name') or user.get('name'), today)
+
+    for i in range(len(config.QUESTIONS)):
+        key = 'answer{0}'.format(i)
+        answer = user[key]
+        if answer:
+            attachment['text'] = "*{0}*\n{1}".format(config.QUESTIONS[i]['text'], answer)
+            attachment['color'] = config.QUESTIONS[i]['color']
+            attachment['mrkdwn_in'] = ["text"]
+            attachments.append(attachment)
+            attachment = {}
+        user[key] = None
+
+    return title, attachments
+
+
 class AnswerHandler:
     def __init__(self, post, post_report):
         self.post = post
         self.post_report = post_report
 
     def handle(self, channel, user, msg):
-        if not 'current_question' in user or user['current_question'] is None:
+        if 'current_question' not in user or user['current_question'] is None:
             return False
 
         question_id = user['current_question']
@@ -34,7 +56,7 @@ class AnswerHandler:
         self.post(channel, question)
 
     def finish_report(self, channel, user):
-        title, attachments = self.format_attachments(user)
+        title, attachments = format_attachments(user)
         user['current_question'] = None
         user['last_report'] = datetime.today()
         if len(attachments) == 0:
@@ -42,23 +64,3 @@ class AnswerHandler:
             return
         self.post(channel, "Thanks, keep rocking!")
         self.post_report(user, title, attachments)
-
-    def format_attachments(self, user):
-        today = date.today().strftime('%b %d, %Y')
-        attachments = []
-        attachment = {}
-        title = "*{0}* posted a status update for *{1}*".format(
-            user.get('real_name') or user.get('name'), today)
-
-        for i in range(len(config.QUESTIONS)):
-            key = 'answer{0}'.format(i)
-            answer = user[key]
-            if answer:
-                attachment['text'] = "*{0}*\n{1}".format(config.QUESTIONS[i]['text'], answer)
-                attachment['color'] = config.QUESTIONS[i]['color']
-                attachment['mrkdwn_in'] = ["text"]
-                attachments.append(attachment)
-                attachment = {}
-            user[key] = None
-
-        return title, attachments

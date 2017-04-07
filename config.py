@@ -1,4 +1,4 @@
-"""Gerenal app configuration"""
+"""General app configuration"""
 
 BOT_NAME = 'dailymeetingbot'
 DAILY_MEETING_CHANNEL = '#test-dailymeetingbot'

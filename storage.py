@@ -2,6 +2,7 @@ from datetime import datetime
 from tinydb import TinyDB, Query
 from tinydb_serialization import Serializer, SerializationMiddleware
 
+
 class DateTimeSerializer(Serializer):
     OBJ_CLASS = datetime  # The class this serializer handles
 
@@ -10,6 +11,7 @@ class DateTimeSerializer(Serializer):
 
     def decode(self, s):
         return datetime.strptime(s, '%Y-%m-%dT%H:%M:%S')
+
 
 class Storage:
     def __init__(self):
@@ -42,7 +44,7 @@ class Storage:
         )
 
     def save_user(self, user):
-        if not user and not 'id' in user:
+        if not user and 'id' not in user:
             raise Exception("Not a valid user")
 
         query = Query()

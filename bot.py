@@ -18,6 +18,7 @@ READ_WEBSOCKET_DELAY = 2
 sc = SlackClient(os.environ['SLACK_BOT_TOKEN'])
 storage = Storage()
 
+
 def post(channel, text, as_user=None):
     if as_user is None:
         as_user = True
@@ -68,8 +69,8 @@ def handle_message(m):
         storage.save_user(user)
 
 
-"""Get the user cached in local storage or fetch from API (It'll be cached later)"""
 def get_user(user_id):
+    """Get the user cached in local storage or fetch from API (It'll be cached later)"""
     user = storage.get_user(user_id, None)
     # TODO: update this user from API once in while
     if user and user.get('name'):
