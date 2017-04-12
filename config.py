@@ -4,6 +4,8 @@ BOT_NAME = 'dailymeetingbot'
 DAILY_MEETING_CHANNEL = '#test-dailymeetingbot'
 TIME = '09:30'
 
+USER_BLACKLIST = ['slackbot']
+
 QUESTIONS = [
     {'text': "O que você conseguiu ontem?", 'color': '#C0DADB'},
     {'text': "O que você vai fazer hoje?", 'color': '#839BBD'},

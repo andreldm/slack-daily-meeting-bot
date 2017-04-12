@@ -98,6 +98,9 @@ def run_daily_meeting():
     print("Run daily meeting:")
 
     for user in users:
+        if user['name'] in config.USER_BLACKLIST:
+            continue
+
         print(user['name'])
         channel = "@{}".format(user['name'])
         first_name = re.split(" +", user.get('real_name') or user.get('name'))[0].strip()
