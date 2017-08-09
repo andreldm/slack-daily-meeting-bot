@@ -19,6 +19,7 @@ def format_attachments(user):
             attachment['mrkdwn_in'] = ["text"]
             attachments.append(attachment)
             attachment = {}
+        user['previous_' + key] = answer
         user[key] = None
 
     return title, attachments
@@ -67,4 +68,6 @@ class AnswerHandler:
             self.post(channel, "I get it, you're not in the mood today.")
             return
         self.post(channel, "Thanks, keep rocking!")
-        self.post_report(user, title, attachments)
+        result = self.post_report(user, title, attachments)
+        user['last_report_ts'] = result['ts']
+        user['last_report_channel'] = result['channel']

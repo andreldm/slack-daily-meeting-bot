@@ -22,11 +22,11 @@ storage = Storage()
 def post(channel, text, as_user=None):
     if as_user is None:
         as_user = True
-    sc.api_call("chat.postMessage", channel=channel, as_user=as_user, text=text)
+    return sc.api_call("chat.postMessage", channel=channel, as_user=as_user, text=text)
 
 
 def post_report(user, title, attachments):
-    sc.api_call("chat.postMessage",
+    return sc.api_call("chat.postMessage",
                 channel=config.DAILY_MEETING_CHANNEL,
                 as_user=False,
                 username=user['name'],
@@ -35,19 +35,60 @@ def post_report(user, title, attachments):
                 attachments=json.dumps(attachments))
 
 
-handler = HandlerManager(post, post_report)
+def update_report(user, channel, title, attachments, ts):
+    # TODO check if config.DAILY_MEETING_CHANNEL can replace channel arg
+    return sc.api_call("chat.update",
+                channel=channel,
+                ts=ts,
+                text=title,
+                attachments=json.dumps(attachments))
+
+
+handler = HandlerManager(post, post_report, update_report)
 
 
 # http://stackoverflow.com/a/42013042/3109776
-def is_direct_message(output, own_id):
-    return (output and \
-        'text' in output and \
-        'channel' in output and \
-        'type' in output and \
-        'user' in output and \
-        output['user'] != own_id and \
-        output['type'] == 'message' and \
-        output['channel'].startswith('D'))
+def parse_direct_message(m, own_id):
+    # TODO simplify, just handle KeyError
+    if (m and
+            'text' in m and
+            'channel' in m and
+            'type' in m and
+            'user' in m and
+            m['user'] != own_id and
+            m['type'] == 'message' and
+            m['channel'].startswith('D')):
+        return {
+            'text': m['text'],
+            'user_id': m['user'],
+            'channel': m['channel'],
+            'msg': m
+        }
+
+    return None
+
+
+def parse_edited_message(m, own_id):
+    # TODO simplify, just handle KeyError
+    if (m and
+            'channel' in m and
+            'type' in m and
+            'subtype' in m and
+            'message' in m and
+            'text' in m['message'] and
+            'user' in m['message'] and
+            m['message']['user'] != own_id and
+            m['type'] == 'message' and
+            m['subtype'] == 'message_changed' and
+            m['channel'].startswith('D')):
+        return {
+            'text': m['message']['text'],
+            'user_id': m['message']['user'],
+            'channel': m['channel'],
+            'msg': m
+        }
+
+    return None
 
 
 def fetch_messages():
@@ -58,15 +99,12 @@ def fetch_messages():
 
 
 def handle_message(m):
-    if not is_direct_message(m, BOT_ID):
-        return
 
-    event = {
-        'text': m['text'],
-        'user_id': m['user'],
-        'channel': m['channel'],
-        'msg': m
-    }
+    event = parse_direct_message(m, BOT_ID)
+    if event is None:
+        event = parse_edited_message(m, BOT_ID)
+    if event is None:
+        return;
 
     event['user'] = get_user(event['user_id'])
     handler.handle(event)
