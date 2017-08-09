@@ -3,8 +3,12 @@ class StartHandler:
         self.post = post
         self.ask_question = ask_question
 
-    def handle(self, channel, user, msg):
-        if msg.lower() in ['report', 'start']:
+    def handle(self, event):
+        text = event['text']
+        user = event['user']
+        channel = event['channel']
+
+        if text.lower() in ['report', 'start']:
             if 'current_question' in user and user['current_question']:
                 self.post(channel, "Already reporting...")
                 self.ask_question(channel, user['current_question'])
@@ -14,4 +18,3 @@ class StartHandler:
             return True
 
         return False
-

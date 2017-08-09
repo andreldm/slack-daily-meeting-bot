@@ -16,8 +16,8 @@ class HandlerManager:
             NonsenseHandler(post)
         ]
 
-    def handle(self, channel, user, msg):
+    def handle(self, event):
         for handler in self.handlers:
-            if handler.handle(channel, user, msg):
+            if handler.handle(event):
                 break
 

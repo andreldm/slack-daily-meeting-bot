@@ -2,8 +2,12 @@ class CancelHandler:
     def __init__(self, post):
         self.post = post
 
-    def handle(self, channel, user, msg):
-        if not msg.lower() == 'cancel':
+    def handle(self, event):
+        user = event['user']
+        channel = event['channel']
+        text = event['text']
+
+        if not text.lower() == 'cancel':
             return False
 
         if 'current_question' in user and user['current_question'] is not None:

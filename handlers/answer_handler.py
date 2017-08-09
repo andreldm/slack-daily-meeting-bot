@@ -29,17 +29,21 @@ class AnswerHandler:
         self.post = post
         self.post_report = post_report
 
-    def handle(self, channel, user, msg):
+    def handle(self, event):
+        text = event['text']
+        user = event['user']
+        channel = event['channel']
+
         if 'current_question' not in user or user['current_question'] is None:
             return False
 
         question_id = user['current_question']
 
-        if msg.lower() in ['nothing', 'none', 'nope', 'skip']:
+        if text.lower() in ['nothing', 'none', 'nope', 'skip']:
             user['answer{0}'.format(question_id)] = None
             user['current_question'] = question_id + 1
         else:
-            user['answer{0}'.format(question_id)] = msg
+            user['answer{0}'.format(question_id)] = text
 
         if question_id + 1 >= len(config.QUESTIONS):
             self.finish_report(channel, user)

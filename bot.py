@@ -40,14 +40,14 @@ handler = HandlerManager(post, post_report)
 
 # http://stackoverflow.com/a/42013042/3109776
 def is_direct_message(output, own_id):
-    return output and \
+    return (output and \
         'text' in output and \
         'channel' in output and \
         'type' in output and \
         'user' in output and \
         output['user'] != own_id and \
         output['type'] == 'message' and \
-        output['channel'].startswith('D')
+        output['channel'].startswith('D'))
 
 
 def fetch_messages():
@@ -61,12 +61,16 @@ def handle_message(m):
     if not is_direct_message(m, BOT_ID):
         return
 
-    text, user_id, channel = m['text'], m['user'], m['channel']
+    event = {
+        'text': m['text'],
+        'user_id': m['user'],
+        'channel': m['channel'],
+        'msg': m
+    }
 
-    if text and channel and user_id:
-        user = get_user(user_id)
-        handler.handle(channel, user, text)
-        storage.save_user(user)
+    event['user'] = get_user(event['user_id'])
+    handler.handle(event)
+    storage.save_user(event['user'])
 
 
 def get_user(user_id):
